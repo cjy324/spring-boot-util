@@ -72,6 +72,9 @@ public class UsrMemberController extends BaseController {
 		memberService.updateToken(id, MemberService.AttrKey__Type2Code.kauthKakaoCom__oauth_token__refresh_token, refreshToken);
 
 		session.setAttribute("loginedMemberId", id);
+		
+		//엑세스토큰 만료시 리프레시 토큰으로 대체 가능하게????
+
 
 		return msgAndReplace(req, "카카오톡 계정으로 로그인하였습니다.", "../home/main");
 	}
