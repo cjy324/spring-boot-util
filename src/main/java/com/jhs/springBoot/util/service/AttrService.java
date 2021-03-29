@@ -81,4 +81,28 @@ public class AttrService {
 
 		return -1;
 	}
+	
+	
+	// 테스트 추가
+	public String getExpireDate(String name) {
+		String[] nameBits = name.split(DIV_STR);
+		String relTypeCode = nameBits[0];
+		int relId = Integer.parseInt(nameBits[1]);
+		String typeCode = nameBits[2];
+		String type2Code = nameBits[3];
+		String value = nameBits[4];
+
+		return getExpireDate(relTypeCode, relId, typeCode, type2Code, value);
+	}
+
+	// 테스트 추가
+	public String getExpireDate(String relTypeCode, int relId, String typeCode, String type2Code, String value) {
+		String expireDate = attrDao.getExpireDate(relTypeCode, relId, typeCode, type2Code, value);
+
+		if (expireDate == null) {
+			return "";
+		}
+
+		return expireDate;
+	}
 }

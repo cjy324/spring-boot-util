@@ -27,6 +27,7 @@ public class MemberService {
 		return memberDao.getMemberByOnLoginProviderMemberId(loginProviderTypeCode, onLoginProviderMemberId);
 	}
 
+	//카카오 유저정보로 기존 회원정보 업데이트
 	public ResultData updateMember(Member member, KapiKakaoCom__v2_user_me__ResponseBody kakaoUser) {
 		Map<String, Object> param = Util.mapOf("id", member.getId());
 
@@ -41,6 +42,8 @@ public class MemberService {
 		return new ResultData("S-1", "회원정보가 수정되었습니다.", "id", member.getId());
 	}
 
+	
+	//카카오 로그인한 회원정보로 회원가입
 	public ResultData join(KapiKakaoCom__v2_user_me__ResponseBody kakaoUser) {
 		String loginProviderTypeCode = "kakaoRest";
 		int onLoginProviderMemberId = kakaoUser.id;
@@ -50,9 +53,9 @@ public class MemberService {
 
 		String loginId = loginProviderTypeCode + "___" + onLoginProviderMemberId;
 
-		param.put("loginId", loginId);
-		param.put("loginPw", Util.getUUIDStr());
-
+		param.put("loginId", loginId);  //ex) kakaoRest___카카오로그인 시 발급된 고유 ID
+		param.put("loginPw", Util.getUUIDStr()); //암호 랜덤 생성
+		//알 수 있는 기타정보는 카카오 유저정보로 입력
 		param.put("nickname", kakaoUser.kakao_account.profile.nickname);
 		param.put("name", kakaoUser.kakao_account.profile.nickname);
 		param.put("email", kakaoUser.kakao_account.email);
@@ -76,11 +79,17 @@ public class MemberService {
 		return actor.getAuthLevel() == 7;
 	}
 
-	public void updateToken(int actorId, MemberService.AttrKey__Type2Code tokenName, String token) {
-		attrService.setValue("member", actorId, "extra", tokenName.toString(), token, null);
+	public void updateToken(int actorId, MemberService.AttrKey__Type2Code tokenName, String token, String token_expires_in) {
+		attrService.setValue("member", actorId, "extra", tokenName.toString(), token, token_expires_in);
 	}
 
 	public String getToken(int actorId, MemberService.AttrKey__Type2Code tokenName) {
 		return attrService.getValue("member", actorId, "extra", tokenName.toString());
 	}
+
+	// 테스트 추가
+	public String getTokenExpireDate(int actorId, MemberService.AttrKey__Type2Code tokenName, String token) {
+		return attrService.getExpireDate("member", actorId, "extra", tokenName.toString(), token);
+	}
+
 }

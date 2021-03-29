@@ -11,6 +11,7 @@ import java.security.MessageDigest;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -540,4 +541,34 @@ public class Util {
 		ObjectMapper objectMapper = new ObjectMapper();
 		return objectMapper.convertValue(o, Map.class);
 	}
+	
+	//초단위인 토큰 유효기간을 날짜단위로 환산하는 유틸
+	public static String getTokenExpiresInToDateTime(long originToken_expires_in) {
+		// 현재 시간 초단위로 가져오기
+		long currentTimeMillis = System.currentTimeMillis();
+		// 현재 시간에 만료기간 더하기
+		originToken_expires_in = currentTimeMillis + (originToken_expires_in * 1000);
+		
+		// 다시 날짜 단위로 환산
+		SimpleDateFormat simpl = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String token_expires_in = simpl.format(originToken_expires_in);
+
+		return token_expires_in;
+	}
+
+	// 오늘 날짜 계산 유틸
+	public static String getTodayDate() {
+		// 날짜 포멧 셋팅
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		// Calendar생성
+		Calendar cal = Calendar.getInstance();
+		// 오늘 날짜 가져오기
+		Date date = new Date();
+		// 오늘 날짜 셋팅
+		cal.setTime(date);
+		String todayDate = sdf.format(cal.getTime());
+
+		return todayDate;
+	}
+
 }

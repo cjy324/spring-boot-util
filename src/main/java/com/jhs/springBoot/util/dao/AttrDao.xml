@@ -47,6 +47,19 @@
 		updateDate = NOW() , `value` =
 		#{value}, expireDate = #{expireDate}
 	</insert>
+	
+	<!-- 테스트 추가 -->
+	<select id="getExpireDate" resultType="String">
+	 	<![CDATA[
+		SELECT `expireDate`
+		FROM attr
+		WHERE relId = #{relId}
+		AND relTypeCode = #{relTypeCode}
+		AND typeCode = #{typeCode}
+		AND type2Code = #{type2Code}
+		AND `value` = #{value}
+		 ]]>
+	</select>
 
 </mapper>
 
